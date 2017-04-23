@@ -186,7 +186,7 @@ int preencherGrafo() {
             grafo_materias[j].amigos = malloc(sizeof(amigo));
             ultimoDaLista = grafo_materias[j].amigos;
 
-            ultimoDaLista->peso = (int) *(tokens + 2);
+            ultimoDaLista->peso = (int) *(*(tokens + 2));
 
             for (i = 3; *(tokens + i); i++) {
 
