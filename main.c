@@ -192,7 +192,7 @@ int preencherGrafo() {
 
                 ultimoDaLista->matricula = *(tokens + i);
                 ultimoDaLista->prox = malloc(sizeof(amigo));
-                ultimoDaLista = ultimoDaLista->prox;
+                ultimoDaLista = (amigo *) ultimoDaLista->prox;
 
             }
 
@@ -215,11 +215,10 @@ void ligarAmigos() {
         elementoLista = grafo_materias[k].amigos;
         while (elementoLista->matricula != NULL) {
             elementoLista->amigo = buscaVertice(elementoLista->matricula);
-            elementoLista = elementoLista->prox;
+            elementoLista = (amigo *)elementoLista->prox;
         }
     }
 }
-
 void strip(char *s) {
     char *p2 = s;
     while (*s != '\0') {
