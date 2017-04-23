@@ -12,6 +12,7 @@
 //elemento da lista de adjacência, aresta
 typedef struct are {
     struct amg *prox;
+    int peso;
     struct ver *amigo;
     char *matricula;
 } amigo;
@@ -180,19 +181,15 @@ int preencherGrafo() {
             grafo_materias[j].matricula = *(tokens + 1);
 
             // inserindo matricula de amigos
-
-            /*
-            a ideia aqui está certa, porém temos que fazer 2 passadas, pois podemos
-            querer referenciar algúem que não está no vetor ainda
-            */
             amigo *ultimoDaLista;
+
             grafo_materias[j].amigos = malloc(sizeof(amigo));
             ultimoDaLista = grafo_materias[j].amigos;
-            for (i = 2; *(tokens + i); i++) {
 
-                //alvo = buscaVertice(*(tokens + i));
+            ultimoDaLista->peso = (int) *(tokens + 2);
 
-                //novaAresta(grafo_materias[j].amigos, alvo, *(tokens + i));
+            for (i = 3; *(tokens + i); i++) {
+
                 ultimoDaLista->matricula = *(tokens + i);
                 ultimoDaLista->prox = malloc(sizeof(amigo));
                 ultimoDaLista = ultimoDaLista->prox;
