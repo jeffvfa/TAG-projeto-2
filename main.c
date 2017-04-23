@@ -46,24 +46,6 @@ int contaMaxAmigos();
 
 aluno *maisAmigos();
 
-aluno * vizinhos(aluno *);
-
-aluno * vizinhos(aluno * inicio){
-  aluno vizinhos[NV];
-  amigo * pindice;
-  int i = 0;
-  pindice = inicio->amigos;
-
-  while (pindice != NULL) {
-    vizinhos[i] =  pindice.amigo;
-    pindice = pindice.prox;
-    i++;
-  }
-
-  return vizinhos;
-}
-
-
 
 aluno *maisAmigos() {
     int i, maisAmigos = 0;
@@ -123,7 +105,6 @@ void menu() {
                 break;
             case 2:
                 system("clear||cls");
-                maiorClique();
                 break;
             case 3:
                 system("clear||cls");
@@ -133,10 +114,6 @@ void menu() {
                 break;
         }
     } while (escape);
-}
-
-void maiorClique(){
-    printf("Cliquezão");
 }
 
 void imprimirPorGrau() {
