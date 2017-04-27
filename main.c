@@ -25,6 +25,17 @@ typedef struct ver {
     amigo *amigos;
 } aluno;
 
+//lista de vértices 
+
+typedef struct vert { 
+    aluno * elemento;
+    struct vert *prox;
+} listaVertice;
+
+
+
+
+
 
 aluno grafo_materias[NV];
 
@@ -45,8 +56,54 @@ aluno *buscaVertice(char *);
 
 int contaMaxAmigos();
 
-aluno *maisAmigos();
+aluno *maisAmigos(); 
 
+listaVertice* inserirVertice(aluno*, listaVertice*);
+
+listaVertice* criarConjuntoVerticesIniciais(listaVertice*); 
+
+int semAmigos(aluno*);
+
+//corpo de funções
+
+int semAmigos(aluno* elem){ 
+    int i;
+    for(i=0; i<=NV; i++){
+        amigo * aux = (grafo_materias[i].amigos); 
+        while(aux != NULL){ 
+            if(aux->amigo = elem) 
+                return 0; 
+            aux = (amigo *) aux->prox;
+        }
+    }  
+    return 1;
+}
+
+listaVertice* inserirVertice(aluno * elem, listaVertice* list){ 
+    listaVertice *aux; 
+    aux = malloc(sizeof(listaVertice));
+    aux->elemento = elem;
+    
+    if(list == NULL){ 
+        aux->prox = NULL;
+        list = aux; 
+        return list;
+    } 
+    else{ 
+        aux->prox = (listaVertice*) list; 
+        list = aux; 
+        return list;
+    } 
+}
+
+listaVertice* criarConjuntoVerticesIniciais(listaVertice* list){ 
+    int i, j;
+    for(i=0; i<=NV; i++){
+        if(semAmigos(&grafo_materias[i])) 
+            inserirVertice(&grafo_materias[i],list);
+            
+    } 
+}
 
 aluno *maisAmigos() {
     int i, maisAmigos = 0;
