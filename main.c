@@ -77,7 +77,7 @@ void imprimeLista(listaVertice*);
 //corpo de funções
 
 void imprimeLista(listaVertice* lista){ 
-    DEBUG
+    
     if (lista == NULL) {
         printf("\n");
         return; 
@@ -103,20 +103,20 @@ listaVertice* retirarVertice(listaVertice * lista){
 }
 
 int semAmigos(aluno * elem){ 
-    DEBUG
+    
     int i;
     for(i=0; i<=NV; i++){
-        printf("%s",((grafo_materias[i].amigos)->amigo)->nome); 
-        DEBUG
+         
+        
         amigo * aux = (grafo_materias[i].amigos);/* printf("%s",(aux->amigo)->nome);*/
         while(aux != NULL){  
             //printf("%s = %s ?",(aux->amigo)->nome, elem->nome);
             if(aux->amigo == elem && aux->removido == 0) { 
-                printf("sim");
+                printf("sim\n"); 
+                getchar();
                 return 0; 
             }
             printf("NÃO"); 
-            getchar();
             aux = (amigo *) aux->prox;
         }
     }  
@@ -139,11 +139,11 @@ senão
     escrever mensagem  (ordenação topológica proposta: L)
 */
 listaVertice* ordenacaoTopologica(){ 
-    DEBUG
+    
     listaVertice * aux = NULL , * ordena = NULL, * inicio = criarConjuntoVerticesIniciais(inicio); 
-    DEBUG
+    
     imprimeLista(inicio);
-    DEBUG
+    
     int visitados = 0; 
     amigo * auxm;
     
@@ -153,7 +153,7 @@ listaVertice* ordenacaoTopologica(){
         
         ordena = inserirVertice(aux->elemento, ordena); 
         auxm = (aux->elemento)->amigos;
-        DEBUGU
+        
         while(auxm != NULL){
             //printf("%s\n", auxm->matricula);
             if(auxm-> removido != 1){ 
@@ -164,7 +164,7 @@ listaVertice* ordenacaoTopologica(){
                 printf("colocou na lista\n");
                 inicio = inserirVertice(auxm->amigo, inicio);  
             }
-            DEBUG 
+             
             auxm = auxm->prox;
         }
     } 
@@ -198,13 +198,13 @@ listaVertice* criarConjuntoVerticesIniciais(listaVertice* list){
     int i, j;
     for(i=0; i<=NV; i++){
         printf("%s\n",grafo_materias[i].nome);
-        DEBUG
+        
         if(semAmigos(&grafo_materias[i])) {
             printf("%s não tinha amigos e vai pra lista\n",grafo_materias[i].nome);
             inserirVertice(&grafo_materias[i],list);}
             
     } 
-    DEBUG
+    
     return list;
 }
 
