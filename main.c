@@ -26,6 +26,7 @@ typedef struct ver {
     char *matricula;
     int numAmigos;
     amigo *amigos;
+    int dificuldade;
 } aluno;
 
 //lista de vértices
@@ -33,16 +34,11 @@ typedef struct ver {
 typedef struct vert {
     aluno * elemento;
     struct vert *prox;
+    int peso;
 } listaVertice;
-
-
-
-
-
 
 aluno grafo_materias[NV];
 listaVertice * ordena = NULL;
-
 
 //protótipos de funções
 int preencherGrafo();
@@ -81,20 +77,137 @@ void imprimeLista(listaVertice*);
 
 void caminhoCritico();
 
+int eInicial(aluno*,listaVertice*);
+
+int pesoPai(aluno*);
+
+aluno * verticePai(aluno*);
 //corpo de funções
 
+int eInicial(aluno * materia, listaVertice * listaInicial){
+  listaVertice * aux;
+  aux = listaInicial;
+
+  while (aux != NULL) {
+    if(materia == aux->elemento)
+      return 1;
+    aux = aux->prox;
+  }
+  return 0;
+}
+
+aluno * verticePai(aluno * elem){
+    int i, pai;
+    for(i=0; i<=NV; i++){
+
+
+        amigo * aux = (grafo_materias[i].amigos);
+
+        while(aux != NULL){
+
+            if(aux->amigo == elem) {
+                return aux->amigo;
+            }
+            aux = (amigo *) aux->prox;
+        }
+    }
+    return NULL;
+}
+
+int pesoPai(aluno * elem){
+  int i, pai;
+  for(i=0; i<=NV; i++){
+
+
+      amigo * aux = (grafo_materias[i].amigos);
+
+      while(aux != NULL){
+
+          if(aux->amigo == elem) {
+              return grafo_materias[i].dificuldade;
+          }
+          aux = (amigo *) aux->prox;
+      }
+  }
+  return 0;
+}
 
 void caminhoCritico(){
-  listaVertice * lista = NULL;
+  listaVertice * lista = NULL,
+  *aux = NULL,
+  *listaCritica = NULL;
+
+  amigo * auxm;
+
+  aluno * maisDif = NULL;
+
+  int i, maisDificil = 0;
 
   if (ordena == NULL) {
     ordenacaoTopologica();
   }
 
+  printf("caminhoCritico\n");
+
+  for (i = 0,printf("testando\n"); i < 35; i++) {
+    printf("entrou\n");
+    auxm = grafo_materias[i].amigos;
+    printf("\n%s", grafo_materias[i].nome);
+    if (auxm == NULL)
+      continue;
+
+    while(auxm != NULL){
+        printf("removido : %d depois:", auxm-> removido);
+        if(auxm-> removido != 0){
+
+            auxm-> removido = 0;
+        }
+        printf("%d\n", auxm-> removido);
+        auxm = auxm->prox;
+    }
+  }
+
   lista = criarConjuntoVerticesIniciais(lista);
 
+  aux = ordena;
 
+  int xoom = tamanhoLista(lista);
 
+  printf("\t\t\t\tcriou inicial de %d\n\n\n\n\n", xoom);
+
+  imprimeLista(lista);
+
+  while (aux != NULL) {
+    if(eInicial(aux->elemento,lista)){
+      printf("Entrou SE\n");
+    }
+
+    else{
+      printf("Entrou SEnão\n");
+      int pai;
+      pai = pesoPai(aux->elemento);
+      (aux->elemento)->dificuldade += pai;
+      aux->peso = (aux->elemento)->dificuldade;
+    }
+    printf("\t\t%s tem peso : %d\n", (aux->elemento)->nome,(aux->elemento)->dificuldade);
+
+    if ((aux->elemento)->dificuldade > maisDificil) {
+      maisDificil = (aux->elemento)->dificuldade;
+      maisDif = (aux->elemento);
+    }
+
+    aux = aux->prox;
+  }
+
+  printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tLista:\n",maisDif->nome, maisDificil);
+
+  while (!semAmigos(maisDif)) {
+    printf("entrou wh\n", );
+    inserirVertice(maisDif, &listaCritica);
+    maisDif = verticePai(maisDif);
+  }
+
+  imprimeLista(listaCritica);
 }
 
 
@@ -120,7 +233,7 @@ int tamanhoLista(listaVertice* lista){
 
   while (aux != NULL) {
     i++;
-    printf("%d\n", i);
+    //printf("%d\n", i);
     aux = aux->prox;
   }
   return i;
@@ -194,10 +307,10 @@ void ordenacaoTopologica(){
         if (aux == NULL)
           break;
 
-        printf("%s entrou na ordenação\n", (aux->elemento)->nome);
+        //printf("%s entrou na ordenação\n", (aux->elemento)->nome);
         inserirVerticeFinal(aux->elemento, &ordena);
-        printf("ordenacaoTopologica: ");
-        imprimeLista(ordena);
+
+        //imprimeLista(ordena);
 
 
         auxm = (aux->elemento)->amigos;
@@ -206,20 +319,20 @@ void ordenacaoTopologica(){
           break;
 
         while(auxm != NULL){
-          printf("entrou while\n.\n.\n");
+          //printf("entrou while\n.\n.\n");
             if(auxm-> removido != 1){
-                printf("removeu a aresta\n");
+                //printf("removeu a aresta\n");
                 auxm-> removido = 1;
             }
             if(semAmigos(auxm->amigo)){
-                printf("não tinha mais amigos colocou na lista\n");
+                //printf("não tinha mais amigos colocou na lista\n");
                 inserirVertice(auxm->amigo, &inicio);
             }
 
             auxm = auxm->prox;
         }
     }
-
+    printf("\n\n\tordenacaoTopologica: \n");
     imprimeLista(ordena);
 }
 
@@ -236,7 +349,7 @@ void inserirVertice(aluno * elem, listaVertice ** list){
 }
 
 void inserirVerticeFinal(aluno * elem, listaVertice ** list){
-  printf("\tStartPrint\n");
+  //printf("\tStartPrint\n");
   listaVertice * aux, *novoVert;
   aux = *list;
 
@@ -244,7 +357,7 @@ void inserirVerticeFinal(aluno * elem, listaVertice ** list){
   novoVert->elemento = elem;
   novoVert->prox = NULL;
 
-  printf("%s\n",(novoVert->elemento)->nome );
+  //printf("%s\n",(novoVert->elemento)->nome );
 
   if (aux == NULL) {
     *list = novoVert;
@@ -257,22 +370,22 @@ void inserirVerticeFinal(aluno * elem, listaVertice ** list){
     }
     aux = aux->prox;
   }
-  printf("\tEndPrint\n");
+  //printf("\tEndPrint\n");
 }
 
 listaVertice* criarConjuntoVerticesIniciais(listaVertice* list){
 
     int i, j;
     for(i=0; i<NV; i++){
-        printf("%s\n",grafo_materias[i].nome);
+        //printf("%s\n",grafo_materias[i].nome);
 
         if(semAmigos(&grafo_materias[i])) {
-            printf("%s não tinha amigos e vai pra lista\n",grafo_materias[i].nome);
+            //printf("%s não tinha amigos e vai pra lista\n",grafo_materias[i].nome);
             inserirVerticeFinal(&grafo_materias[i],&list);
             }
     }
 
-    imprimeLista(list);
+    //imprimeLista(list);
     return list;
 }
 
@@ -320,8 +433,10 @@ void menu() {
         printf("\t====================================================\n");
         printf("\t======================= Menu =======================\n");
         printf("\t====================================================\n");
+        printf("\t==========Curso: CIÊNCIA DA COMPUTAÇÃO =============\n");
+        printf("\t====================================================\n");
         printf("\t========= 1) Imprimir ordenação topológica =========\n");
-        printf("\t========= 2) Imprimir o maior clique      ==========\n");
+        printf("\t========= 2) Imprimir o caminho crítico   ==========\n");
         printf("\t========= 3) Sair                         ==========\n");
         printf("\t====================================================\n");
         printf("\t====================================================\n");
@@ -334,6 +449,7 @@ void menu() {
                 break;
             case 2:
                 system("clear||cls");
+                caminhoCritico();
                 break;
             case 3:
                 system("clear||cls");
@@ -386,7 +502,7 @@ int preencherGrafo() {
     size_t len = 0;
     ssize_t read;
     char **tokens;
-    int i, j = 0;
+    int i, j = 0, transforma;
     aluno *alvo;
 
     //abre-se o arquivo
@@ -397,16 +513,24 @@ int preencherGrafo() {
 
 
     while ((read = getline(&line, &len, fp)) != -1) {
+      printf("%s\n", line);
         strip(line);
         // Separando linha por virgulas
         tokens = str_split(line, ',');
+
         if (tokens) {
+
+            printf("%s  ,  %s  ,   %s   ,  %s ...\n", *(tokens + 1),*(tokens + 2),*(tokens + 3),*(tokens + 4));
             //inicializando a lista de amigos como uma lista vazia
             grafo_materias[j].amigos = NULL;
             //inserindo nome do aluno no grafo
             grafo_materias[j].nome = *(tokens);
             //inserindo matricula do aluno
             grafo_materias[j].matricula = *(tokens + 1);
+            //dificuldadeno vertice também
+            transforma = (int) *(*(tokens + 2));
+            transforma -= 48;
+            grafo_materias[j].dificuldade = transforma;
 
             // inserindo matricula de amigos
             amigo *ultimoDaLista;
@@ -414,7 +538,7 @@ int preencherGrafo() {
             grafo_materias[j].amigos = malloc(sizeof(amigo));
             ultimoDaLista = grafo_materias[j].amigos;
 
-            ultimoDaLista->peso = (int) *(*(tokens + 2));
+            ultimoDaLista->peso = transforma;
 
             ultimoDaLista->removido = (int) 0;
 
