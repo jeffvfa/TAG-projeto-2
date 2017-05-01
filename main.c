@@ -98,15 +98,18 @@ int eInicial(aluno * materia, listaVertice * listaInicial){
 
 aluno * verticePai(aluno * elem){
     int i, pai;
+    aluno * paiDoElem;
     for(i=0; i<=NV; i++){
-
+        //printf("tá procurando o pai de %s\n", elem->nome);
 
         amigo * aux = (grafo_materias[i].amigos);
 
         while(aux != NULL){
 
             if(aux->amigo == elem) {
-                return aux->amigo;
+                //printf("acou o pai é %s\n", grafo_materias[i].nome);
+                paiDoElem = &grafo_materias[i];
+                return paiDoElem;
             }
             aux = (amigo *) aux->prox;
         }
@@ -202,9 +205,12 @@ void caminhoCritico(){
   printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tLista:\n",maisDif->nome, maisDificil);
 
   while (!semAmigos(maisDif)) {
-    printf("entrou wh\n", );
+    /*printf("entrou wh\n");
+    DEBUG
+    printf("inseriu %s\n", maisDif->nome);*/
     inserirVertice(maisDif, &listaCritica);
     maisDif = verticePai(maisDif);
+    //printf("%s é o pai\n", maisDif->nome);
   }
 
   imprimeLista(listaCritica);
@@ -513,14 +519,14 @@ int preencherGrafo() {
 
 
     while ((read = getline(&line, &len, fp)) != -1) {
-      printf("%s\n", line);
+      //printf("%s\n", line);
         strip(line);
         // Separando linha por virgulas
         tokens = str_split(line, ',');
 
         if (tokens) {
 
-            printf("%s  ,  %s  ,   %s   ,  %s ...\n", *(tokens + 1),*(tokens + 2),*(tokens + 3),*(tokens + 4));
+            //printf("%s  ,  %s  ,   %s   ,  %s ...\n", *(tokens + 1),*(tokens + 2),*(tokens + 3),*(tokens + 4));
             //inicializando a lista de amigos como uma lista vazia
             grafo_materias[j].amigos = NULL;
             //inserindo nome do aluno no grafo
@@ -552,7 +558,7 @@ int preencherGrafo() {
 
             grafo_materias[j].numAmigos = i - 2;
 
-            printf("\n");
+            //printf("\n");
         }
         j++;
     }
