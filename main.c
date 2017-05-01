@@ -41,6 +41,8 @@ typedef struct vert {
 
 
 aluno grafo_materias[NV];
+listaVertice * ordena = NULL;
+
 
 //protótipos de funções
 int preencherGrafo();
@@ -71,12 +73,30 @@ listaVertice* criarConjuntoVerticesIniciais(listaVertice*);
 
 int semAmigos(aluno*);
 
-listaVertice* ordenacaoTopologica();
+void ordenacaoTopologica();
 
 int tamanhoLista(listaVertice*);
 
 void imprimeLista(listaVertice*);
+
+void caminhoCritico();
+
 //corpo de funções
+
+
+void caminhoCritico(){
+  listaVertice * lista = NULL;
+
+  if (ordena == NULL) {
+    ordenacaoTopologica();
+  }
+
+  lista = criarConjuntoVerticesIniciais(lista);
+
+
+
+}
+
 
 void imprimeLista(listaVertice * lista){
     //printf("\tStartPrint\n");
@@ -154,9 +174,8 @@ se o grafo tem arestas então
 senão
     escrever mensagem  (ordenação topológica proposta: L)
 */
-listaVertice* ordenacaoTopologica(){
+void ordenacaoTopologica(){
     listaVertice * aux = NULL,
-    * ordena = NULL,
     * inicio = NULL;
     inicio = criarConjuntoVerticesIniciais(inicio);
 
@@ -170,7 +189,7 @@ listaVertice* ordenacaoTopologica(){
     amigo * auxm;
 
     while(inicio != NULL && tamanhoLista(ordena) != NV){
-        
+
         aux = retirarVertice(&inicio);
         if (aux == NULL)
           break;
@@ -201,13 +220,7 @@ listaVertice* ordenacaoTopologica(){
         }
     }
 
-    if(tamanhoLista(ordena) != NV)
-        printf("ZICOU");
-    else printf("DEU BOM");
-
-    printf("\n\n\n\n\n\n\n\n");
     imprimeLista(ordena);
-    return ordena;
 }
 
 void inserirVertice(aluno * elem, listaVertice ** list){
@@ -307,7 +320,7 @@ void menu() {
         printf("\t====================================================\n");
         printf("\t======================= Menu =======================\n");
         printf("\t====================================================\n");
-        printf("\t========= 1) Imprimir em ordem de grau    ==========\n");
+        printf("\t========= 1) Imprimir ordenação topológica =========\n");
         printf("\t========= 2) Imprimir o maior clique      ==========\n");
         printf("\t========= 3) Sair                         ==========\n");
         printf("\t====================================================\n");
@@ -317,7 +330,7 @@ void menu() {
         switch (opt) {
             case 1:
                 system("clear||cls");
-                imprimirPorGrau();
+                ordenacaoTopologica();
                 break;
             case 2:
                 system("clear||cls");
@@ -493,7 +506,6 @@ char **str_split(char *a_str, const char a_delim) {
 
 int main() {
   preencherGrafo();
-  listaVertice * ordenacao_topologica = ordenacaoTopologica();
 
   menu();
 
