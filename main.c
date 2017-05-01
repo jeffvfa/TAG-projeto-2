@@ -204,7 +204,7 @@ void caminhoCritico(){
 
   printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tLista:\n",maisDif->nome, maisDificil);
 
-  while (!semAmigos(maisDif)) {
+  while (maisDif != NULL) {
     /*printf("entrou wh\n");
     DEBUG
     printf("inseriu %s\n", maisDif->nome);*/
