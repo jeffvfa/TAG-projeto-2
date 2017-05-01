@@ -107,6 +107,9 @@ int tamanhoLista(listaVertice* lista){
 }
 
 listaVertice* retirarVertice(listaVertice ** lista){
+  if (*lista == NULL) {
+    return NULL;
+  }
 
   listaVertice *aux = NULL;
 
@@ -166,15 +169,12 @@ listaVertice* ordenacaoTopologica(){
     int visitados = 0;
     amigo * auxm;
 
-    while(inicio != NULL){
-        //printf("entrou while\n.\n.\n");
-        //imprimeLista(inicio);
-        //printf("\tvai tirar um vertice da lisata inicio\n");
+    while(inicio != NULL && tamanhoLista(ordena) != NV){
+        
         aux = retirarVertice(&inicio);
         if (aux == NULL)
           break;
-        //printf("\ttirou o vertice %s um vertice da lisata inicio\n",(aux->elemento)->nome);
-        //imprimeLista(inicio);
+
         printf("%s entrou na ordenação\n", (aux->elemento)->nome);
         inserirVerticeFinal(aux->elemento, &ordena);
         printf("ordenacaoTopologica: ");
