@@ -63,9 +63,11 @@ aluno *maisAmigos();
 
 void inserirVertice(aluno*, listaVertice**);
 
-listaVertice* retirarVertice(listaVertice*);
+void inserirVerticeFinal(aluno*, listaVertice**);
 
-void criarConjuntoVerticesIniciais(listaVertice*);
+listaVertice* retirarVertice(listaVertice**);
+
+listaVertice* criarConjuntoVerticesIniciais(listaVertice*);
 
 int semAmigos(aluno*);
 
@@ -77,9 +79,9 @@ void imprimeLista(listaVertice*);
 //corpo de funções
 
 void imprimeLista(listaVertice * lista){
-    printf("\tStartPrint\n");
+    //printf("\tStartPrint\n");
     listaVertice * aux;
-    printf("%p : \n", aux);
+    //printf("%p : \n", aux);
     aux = lista;
     ///printf("%s -> ", (aux->elemento)->nome);
 
@@ -88,21 +90,32 @@ void imprimeLista(listaVertice * lista){
       aux = aux->prox;
     }
     printf("\n");
-    printf("\tEndPrint\n");
+    //printf("\tEndPrint\n");
 }
 
 int tamanhoLista(listaVertice* lista){
-    if (lista == NULL)
-        return 0;
-    else return 1+tamanhoLista(lista->prox);
+  int i =0;
+  listaVertice * aux;
+  aux = lista;
+
+  while (aux != NULL) {
+    i++;
+    printf("%d\n", i);
+    aux = aux->prox;
+  }
+  return i;
 }
 
-listaVertice* retirarVertice(listaVertice * lista){
+listaVertice* retirarVertice(listaVertice ** lista){
 
-    listaVertice * aux = lista;
-    lista = aux->prox;
+  listaVertice *aux = NULL;
 
-    return aux;
+  aux = *lista;
+  *lista = (*lista)->prox;
+
+  aux->prox = NULL;
+
+  return aux;
 }
 
 int semAmigos(aluno * elem){
@@ -139,30 +152,48 @@ senão
     escrever mensagem  (ordenação topológica proposta: L)
 */
 listaVertice* ordenacaoTopologica(){
-    listaVertice * aux = NULL ,
+    listaVertice * aux = NULL,
     * ordena = NULL,
     * inicio = NULL;
-    criarConjuntoVerticesIniciais(inicio);
-    DEBUG
-    imprimeLista(inicio);
+    inicio = criarConjuntoVerticesIniciais(inicio);
 
+    int i = tamanhoLista(inicio);
+
+    /*
+    printf("DEVERIA IMPRIMIR A LISTA de tamanho %d\n",i);
+    imprimeLista(inicio);
+    */
     int visitados = 0;
     amigo * auxm;
 
     while(inicio != NULL){
+        //printf("entrou while\n.\n.\n");
+        //imprimeLista(inicio);
+        //printf("\tvai tirar um vertice da lisata inicio\n");
+        aux = retirarVertice(&inicio);
+        if (aux == NULL)
+          break;
+        //printf("\ttirou o vertice %s um vertice da lisata inicio\n",(aux->elemento)->nome);
+        //imprimeLista(inicio);
+        printf("%s entrou na ordenação\n", (aux->elemento)->nome);
+        inserirVerticeFinal(aux->elemento, &ordena);
+        printf("ordenacaoTopologica: ");
+        imprimeLista(ordena);
 
-        aux = retirarVertice(inicio);
 
-        inserirVertice(aux->elemento, &ordena);
         auxm = (aux->elemento)->amigos;
 
+        if (auxm == NULL)
+          break;
+
         while(auxm != NULL){
+          printf("entrou while\n.\n.\n");
             if(auxm-> removido != 1){
-                printf("removeu\n");
+                printf("removeu a aresta\n");
                 auxm-> removido = 1;
             }
             if(semAmigos(auxm->amigo)){
-                printf("colocou na lista\n");
+                printf("não tinha mais amigos colocou na lista\n");
                 inserirVertice(auxm->amigo, &inicio);
             }
 
@@ -174,22 +205,49 @@ listaVertice* ordenacaoTopologica(){
         printf("ZICOU");
     else printf("DEU BOM");
 
+    printf("\n\n\n\n\n\n\n\n");
+    imprimeLista(ordena);
     return ordena;
 }
 
-void inserirVertice(aluno * elem, listaVertice **list){
-    imprimeLista(*list);
+void inserirVertice(aluno * elem, listaVertice ** list){
+    //imprimeLista(*list);
     listaVertice *aux = NULL;
     aux = (listaVertice*) malloc(sizeof(listaVertice));
     aux->elemento = elem;
-    printf("automaticamente: %s\n", (aux->elemento)->nome);
+    //printf("automaticamente: %s\n", (aux->elemento)->nome);
 
     aux->prox = *list;
     *list = aux;
-    printf("vai imprimeLista\n");
+    //printf("vai imprimeLista\n");
 }
 
-void criarConjuntoVerticesIniciais(listaVertice* list){
+void inserirVerticeFinal(aluno * elem, listaVertice ** list){
+  printf("\tStartPrint\n");
+  listaVertice * aux, *novoVert;
+  aux = *list;
+
+  novoVert = (listaVertice*) malloc(sizeof(listaVertice));
+  novoVert->elemento = elem;
+  novoVert->prox = NULL;
+
+  printf("%s\n",(novoVert->elemento)->nome );
+
+  if (aux == NULL) {
+    *list = novoVert;
+  }
+
+  while (aux != NULL) {
+    if (aux->prox == NULL) {
+      aux->prox = novoVert;
+      return;
+    }
+    aux = aux->prox;
+  }
+  printf("\tEndPrint\n");
+}
+
+listaVertice* criarConjuntoVerticesIniciais(listaVertice* list){
 
     int i, j;
     for(i=0; i<NV; i++){
@@ -197,10 +255,12 @@ void criarConjuntoVerticesIniciais(listaVertice* list){
 
         if(semAmigos(&grafo_materias[i])) {
             printf("%s não tinha amigos e vai pra lista\n",grafo_materias[i].nome);
-            inserirVertice(&grafo_materias[i],&list);
-            imprimeLista(list);
-        }
+            inserirVerticeFinal(&grafo_materias[i],&list);
+            }
     }
+
+    imprimeLista(list);
+    return list;
 }
 
 aluno *maisAmigos() {
@@ -432,12 +492,10 @@ char **str_split(char *a_str, const char a_delim) {
 }
 
 int main() {
-    preencherGrafo();
-    listaVertice * ordenacao_topologica = ordenacaoTopologica();
+  preencherGrafo();
+  listaVertice * ordenacao_topologica = ordenacaoTopologica();
 
-    imprimeLista(ordenacaoTopologica);
+  menu();
 
-    menu();
-
-    return 0;
+  return 0;
 }
