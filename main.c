@@ -1,13 +1,13 @@
 /*
-@jeffvfa
-@renanlr
+@jeffvfa - Jefferson Viana Fonseca Abreu 130028959
+@renanlr - Renan Lobato Rheinboldt
 */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <assert.h>
 
-#define NV 35
+#define NV 43
 #define DEBUG printf("aqui"); getchar();
 #define DEBUGU printf("aquiu");
 
@@ -82,6 +82,9 @@ int eInicial(aluno*,listaVertice*);
 int pesoPai(aluno*);
 
 aluno * verticePai(aluno*);
+
+void printaGrafo();
+
 //corpo de funções
 
 int eInicial(aluno * materia, listaVertice * listaInicial){
@@ -117,6 +120,21 @@ aluno * verticePai(aluno * elem){
     return NULL;
 }
 
+void printaGrafo() {
+  int i;
+  for(i=0; i<NV; i++){
+      printf("%s\n", grafo_materias[i].nome);
+      amigo * aux = (grafo_materias[i].amigos),
+      *aux2 = malloc(sizeof(amigo));
+
+      while(aux != NULL){
+        printf("\t%s\n", (aux->amigo)->nome);
+        aux = (amigo *) aux->prox;
+      }
+  }
+}
+
+
 int pesoPai(aluno * elem){
   int i, pai;
   for(i=0; i<=NV; i++){
@@ -150,22 +168,22 @@ void caminhoCritico(){
     ordenacaoTopologica();
   }
 
-  printf("caminhoCritico\n");
+  //printf("caminhoCritico\n");
 
-  for (i = 0,printf("testando\n"); i < 35; i++) {
-    printf("entrou\n");
+  for (i = 0; i < NV; i++) {
+    //printf("entrou\n");
     auxm = grafo_materias[i].amigos;
-    printf("\n%s", grafo_materias[i].nome);
+    //printf("\n%s", grafo_materias[i].nome);
     if (auxm == NULL)
       continue;
 
     while(auxm != NULL){
-        printf("removido : %d depois:", auxm-> removido);
+        //printf("removido : %d depois:", auxm-> removido);
         if(auxm-> removido != 0){
 
             auxm-> removido = 0;
         }
-        printf("%d\n", auxm-> removido);
+        //printf("%d\n", auxm-> removido);
         auxm = auxm->prox;
     }
   }
@@ -173,26 +191,26 @@ void caminhoCritico(){
   lista = criarConjuntoVerticesIniciais(lista);
 
   aux = ordena;
-
+  /*
   int xoom = tamanhoLista(lista);
 
   printf("\t\t\t\tcriou inicial de %d\n\n\n\n\n", xoom);
 
   imprimeLista(lista);
-
+  */
   while (aux != NULL) {
     if(eInicial(aux->elemento,lista)){
-      printf("Entrou SE\n");
+      //printf("Entrou SE\n");
     }
 
     else{
-      printf("Entrou SEnão\n");
+      //printf("Entrou SEnão\n");
       int pai;
       pai = pesoPai(aux->elemento);
       (aux->elemento)->dificuldade += pai;
       aux->peso = (aux->elemento)->dificuldade;
     }
-    printf("\t\t%s tem peso : %d\n", (aux->elemento)->nome,(aux->elemento)->dificuldade);
+    //printf("\t\t%s tem peso : %d\n", (aux->elemento)->nome,(aux->elemento)->dificuldade);
 
     if ((aux->elemento)->dificuldade > maisDificil) {
       maisDificil = (aux->elemento)->dificuldade;
@@ -202,7 +220,7 @@ void caminhoCritico(){
     aux = aux->prox;
   }
 
-  printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tLista:\n",maisDif->nome, maisDificil);
+  printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tcaminho:\n",maisDif->nome, maisDificil);
 
   while (maisDif != NULL) {
     /*printf("entrou wh\n");
@@ -443,7 +461,8 @@ void menu() {
         printf("\t====================================================\n");
         printf("\t========= 1) Imprimir ordenação topológica =========\n");
         printf("\t========= 2) Imprimir o caminho crítico   ==========\n");
-        printf("\t========= 3) Sair                         ==========\n");
+        //printf("\t========= 3) Imprimir o grafo             ==========\n");
+        printf("\t========= 4) Sair                         ==========\n");
         printf("\t====================================================\n");
         printf("\t====================================================\n");
         printf("\t====================================================\n\t>>>");
@@ -458,6 +477,10 @@ void menu() {
                 caminhoCritico();
                 break;
             case 3:
+                system("clear||cls");
+                //printaGrafo();
+                break;
+            case 4:
                 system("clear||cls");
                 escape = 0;
                 break;
@@ -552,6 +575,7 @@ int preencherGrafo() {
 
                 ultimoDaLista->matricula = *(tokens + i);
                 ultimoDaLista->prox = malloc(sizeof(amigo));
+                //ultimoDaLista->prox = NULL;
                 ultimoDaLista = (amigo *) ultimoDaLista->prox;
 
             }
