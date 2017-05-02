@@ -123,15 +123,18 @@ aluno * verticePai(aluno * elem){
 void printaGrafo() {
   int i;
   for(i=0; i<NV; i++){
-      printf("%s\n", grafo_materias[i].nome);
-      amigo * aux = (grafo_materias[i].amigos),
-      *aux2 = malloc(sizeof(amigo));
+      printf("\t%s\n", grafo_materias[i].nome);
+      amigo * aux = (grafo_materias[i].amigos);
+      amigo * aux2 = malloc(sizeof(amigo));
 
-      while(aux != NULL){
-        printf("\t%s\n", (aux->amigo)->nome);
-        aux = (amigo *) aux->prox;
+      while(aux->matricula != NULL){
+        printf("\t\t%s\n", (aux->amigo)->nome);
+        aux = aux->prox;
       }
   }
+    printf("\n\n\t>>> Pressione uma tecla para voltar ao menu <<<\n\t");
+    getchar();
+    getchar();
 }
 
 
@@ -142,7 +145,7 @@ int pesoPai(aluno * elem){
 
       amigo * aux = (grafo_materias[i].amigos);
 
-      while(aux != NULL){
+      while(aux->matricula != NULL){
 
           if(aux->amigo == elem) {
               return grafo_materias[i].dificuldade;
@@ -470,7 +473,7 @@ void menu() {
         printf("\t====================================================\n");
         printf("\t========= 1) Imprimir ordenação topológica =========\n");
         printf("\t========= 2) Imprimir o caminho crítico   ==========\n");
-        //printf("\t========= 3) Imprimir o grafo             ==========\n");
+        printf("\t========= 3) Imprimir o grafo             ==========\n");
         printf("\t========= 4) Sair                         ==========\n");
         printf("\t====================================================\n");
         printf("\t====================================================\n");
@@ -487,7 +490,7 @@ void menu() {
                 break;
             case 3:
                 system("clear||cls");
-                //printaGrafo();
+                printaGrafo();
                 break;
             case 4:
                 system("clear||cls");
@@ -498,41 +501,6 @@ void menu() {
         }
     } while (escape);
 }
-
-void imprimirPorGrau() {
-    int i = 0, j = 0, k = 0, l = 0;
-    aluno grafo_materias_ordenado[NV];
-    aluno temp, aux;
-    grafo_materias_ordenado[0] = grafo_materias[0];
-    ++k;
-    for (i = 1; i < NV; ++i) {
-        for (j = 0; j < k; ++j) {
-            if (grafo_materias[i].numAmigos >= grafo_materias_ordenado[j].numAmigos) {
-                ++k;
-                temp = grafo_materias_ordenado[j];
-                grafo_materias_ordenado[j] = grafo_materias[i];
-                for (l = j + 1; l < k; ++l) {
-                    aux = grafo_materias_ordenado[l];
-                    grafo_materias_ordenado[l] = temp;
-                    temp = aux;
-                }
-                break;
-            } else if (j == (k - 1)) {
-                grafo_materias_ordenado[j + 1] = grafo_materias[i];
-                ++k;
-                break;
-            }
-        }
-    }
-    for (i = 0; i < NV; ++i) {
-        printf("\t%s %s %d amigos\n", grafo_materias_ordenado[i].matricula, grafo_materias_ordenado[i].nome,
-               grafo_materias_ordenado[i].numAmigos);
-    }
-    printf("\n\tPressione uma tecla para voltar ao menu\n");
-    getchar();
-    getchar();
-}
-
 
 int preencherGrafo() {
     FILE *fp;
@@ -584,7 +552,6 @@ int preencherGrafo() {
 
                 ultimoDaLista->matricula = *(tokens + i);
                 ultimoDaLista->prox = malloc(sizeof(amigo));
-                //ultimoDaLista->prox = NULL;
                 ultimoDaLista = (amigo *) ultimoDaLista->prox;
 
             }
