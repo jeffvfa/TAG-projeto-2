@@ -220,7 +220,7 @@ void caminhoCritico(){
     aux = aux->prox;
   }
 
-  printf("\n\n\n\t%s é o ciclo mais difícil com o peso %d\n\tcaminho:\n",maisDif->nome, maisDificil);
+  printf("\t%s é o ciclo mais difícil com o peso %d\n\tCaminho:\n\n",maisDif->nome, maisDificil);
 
   while (maisDif != NULL) {
     /*printf("entrou wh\n");
@@ -241,12 +241,21 @@ void imprimeLista(listaVertice * lista){
     //printf("%p : \n", aux);
     aux = lista;
     ///printf("%s -> ", (aux->elemento)->nome);
-
+    int k = 0;
+    printf("\t");
     while (aux != NULL) {
-      printf("%s -> ", (aux->elemento)->nome);
+      if (k==3){
+        printf("%s ->\n\t", (aux->elemento)->nome);
+        k = 0;
+      } else {
+        printf("%s -> ", (aux->elemento)->nome);
+        k++;
+      }
       aux = aux->prox;
     }
-    printf("\n");
+    printf("\n\n\t>>> Pressione uma tecla para voltar ao menu <<<\n\t");
+    getchar();
+    getchar();
     //printf("\tEndPrint\n");
 }
 
@@ -356,7 +365,7 @@ void ordenacaoTopologica(){
             auxm = auxm->prox;
         }
     }
-    printf("\n\n\tordenacaoTopologica: \n");
+    printf("\tOrdenacao Topologica: \n\n");
     imprimeLista(ordena);
 }
 
@@ -453,7 +462,7 @@ void menu() {
     int escape = 1, opt;
 
     do {
-        //system("clear||cls");
+        system("clear||cls");
         printf("\t====================================================\n");
         printf("\t======================= Menu =======================\n");
         printf("\t====================================================\n");
